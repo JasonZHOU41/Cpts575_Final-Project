@@ -1,8 +1,10 @@
 # Cpts575
 
+This repo is for the final project of CPTs 575
+
 ## Data Source
 
-https://www.kaggle.com/c/pubg-finish-placement-prediction/data?select=train_V2.csv
+https://www.kaggle.com/c/pubg-finish-placement-prediction/data
 
 !!!! Put the data on the ./data
 
