@@ -6,8 +6,8 @@ This repo is for the final project of CPTs 575
 
 https://www.kaggle.com/c/pubg-finish-placement-prediction/data
 
-!!!! Put the data on the ./data
+!!!! Put the data sets on the ./data
 
-## Project requirement:
+## Project requirement
 * python 3.6
 * pip install -r requirements.txt
