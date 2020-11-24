@@ -10,4 +10,4 @@ https://www.kaggle.com/c/pubg-finish-placement-prediction/data
 
 ## Project requirement
 * python 3.6
-* pip install -r requirements.txt
+* pip install -r requirement.txt
