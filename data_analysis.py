@@ -7,6 +7,9 @@ import seaborn as sns
 CSV_FILE_PATH = "./data/train_V2.csv"
 data = pd.read_csv(CSV_FILE_PATH)
 
+# ------------------------------------------------------
+# ---------------Basic info of the data-----------------
+# ------------------------------------------------------
 # # Basic info of the data
 # # Check the basic info of training dataset
 # data.info()
@@ -36,8 +39,9 @@ data = pd.read_csv(CSV_FILE_PATH)
 # plt.savefig('./image/Match types Counts.png')
 # plt.show()
 
-
-# # Data Analysis
+# ------------------------------------------------------
+# ---------------------DATA Analysis--------------------
+# ------------------------------------------------------
 # # correlation matrix
 # plt.subplots(figsize=(15, 15))
 # sns.heatmap(data.corr(), square=True, annot=True, fmt='.3f', annot_kws={"size": 8}, cmap="RdBu_r", center=0)
@@ -54,20 +58,23 @@ data = pd.read_csv(CSV_FILE_PATH)
 # walk_distance = walk_distance[walk_distance["kills"] > 0]
 # print(len(walk_distance))
 
-# kill analysis
-# Basic info of killer
-print("The average of each team kills {:.4f} players, "
-      "99% of people have {} kills, the most kills number is {}."
-      .format(data['kills'].mean(), data['kills'].quantile(0.99), data['kills'].max()))
-
-
-# Plot of kill count
-kill_data = data.copy()
-kill_data.loc[kill_data['kills'] > kill_data['kills'].quantile(0.99)] = '7+'
-sns.countplot(kill_data['kills'].astype('str').sort_values())
-plt.title("Kills Count")
-plt.savefig('./image/kills count.png')
-plt.show()
+# ------------------------------------------------------
+# ---------------------kill analysis--------------------
+# ------------------------------------------------------
+# # Basic info of killer
+# data['kills'].describe()
+# print("The average of each team kills {:.4f} players, "
+#       "99% of people have {} kills, the most kills number is {}."
+#       .format(data['kills'].mean(), data['kills'].quantile(0.99), data['kills'].max()))
+#
+#
+# # Plot of kill count
+# kill_data = data.copy()
+# kill_data.loc[kill_data['kills'] > kill_data['kills'].quantile(0.99)] = '7+'
+# sns.countplot(kill_data['kills'].astype('str').sort_values())
+# plt.title("Kills Count")
+# plt.savefig('./image/kills count.png')
+# plt.show()
 
 
 # # Lucky boy
@@ -79,15 +86,24 @@ plt.show()
 #       "(Total people who win the game without kill anyone / Total people who kill zero people in the game)"
 #       .format(counts, 100*per))
 
+# # Plot of Damage by 0 killers
+# plt.figure(figsize=(15, 10))
 # plt.title("Damage Dealt by 0 killers")
-# sns.countplot(data['winPlacePerc'])
+# sns.displot(kill_data2['damageDealt'])
 # plt.show()
 
 # # Plot of kill vs win
 # sns.scatterplot(x="winPlacePerc", y="kills", data=data)
 # plt.title("Kills Count")
 # plt.show()
-
+#
+# # Plot of DBNOs vs ratio
+# plt.figure(figsize=(15, 5))
+# sns.pointplot(x='DBNOs', y='winPlacePerc', data=data, alpha=0.8)
+# plt.title('DBNOs / Win Ratio')
+# plt.grid()
+# plt.show()
+#
 # # Plot of DBNOs count
 # plt.figure(figsize=(15, 8))
 # kill_data = data.copy()
@@ -96,3 +112,54 @@ plt.show()
 # sns.countplot(kill_data['DBNOs'].astype('str').sort_values())
 # plt.title("DBNOs Count")
 # plt.show()
+
+
+# ------------------------------------------------------
+# ---------------------run analysis--------------------
+# ------------------------------------------------------
+# Basic info of runner
+
+# Some facts about walking distance
+# print(data['walkDistance'].describe())
+#
+# print("The average of each team walk for {:.2f} m, "
+#       "99% of people have walk {} m, the most walking distance is {}m."
+#       .format(data['walkDistance'].mean(), data['walkDistance'].quantile(0.99), data['walkDistance'].max()))
+#
+# # The plot of the distribution of walking
+# walk_data = data.copy()
+# walk_data = walk_data[walk_data['walkDistance'] < data['walkDistance'].quantile(0.99)]
+# plt.title("Walking Distance Distribution")
+# sns.distplot(walk_data['walkDistance'], kde=False)
+# plt.show()
+#
+#
+# # Plot of walk vs win
+# sns.scatterplot(x="winPlacePerc", y="walkDistance", data=data)
+# plt.title("walkDistance Count")
+# plt.show()
+
+
+# ------------------------------------------------------
+# ---------------------drive analysis--------------------
+# ------------------------------------------------------
+# print(data['rideDistance'].describe())
+#
+# print("The average of each team drive for {:.2f} m, "
+#       "99% of people have drive {} m, the most driving distance is {}m."
+#       .format(data['rideDistance'].mean(), data['rideDistance'].quantile(0.99), data['rideDistance'].max()))
+#
+# # The plot of the distribution of driving
+# drive_data = data.copy()
+# drive_data = drive_data[drive_data['rideDistance'] < data['rideDistance'].quantile(0.99)]
+# plt.title("Drive Distance Distribution")
+# sns.distplot(drive_data['rideDistance'], kde=False)
+# plt.show()
+#
+#
+# # Plot of drive vs win
+# sns.scatterplot(x="winPlacePerc", y="rideDistance", data=data)
+# plt.title("rideDistance Count")
+# plt.show()
+
+
