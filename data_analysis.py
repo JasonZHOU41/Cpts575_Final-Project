@@ -8,13 +8,19 @@ CSV_FILE_PATH = "./data/train_V2.csv"
 data = pd.read_csv(CSV_FILE_PATH)
 
 # ------------------------------------------------------
-# ---------------Basic info of the data-----------------
+# -              Basic info of the data                -
 # ------------------------------------------------------
-# # Basic info of the data
 # # Check the basic info of training dataset
 # data.info()
 #
-# # Check the first 5 rows
+# # Check the missing value of the dataset
+# print(data.isnull().sum())
+# print(data[data['winPlacePerc'].isnull()])
+#
+# # Drop row with NaN 'winPlacePerc' value
+# data.drop(2744604, inplace=True)
+#
+# # # Check the first 5 rows
 # # print(data.head(5))
 #
 # # Some information of the game
@@ -25,12 +31,13 @@ data = pd.read_csv(CSV_FILE_PATH)
 # match_types = data.loc[:, "matchType"].value_counts().to_frame().reset_index()
 # match_types.columns = ["Type", "Count"]
 # print(match_types)
+# # Collect the type of game less than 1.7 thousand
 # Total = 0
 # for count in match_types["Count"][6:]:
 #     Total += count
 # new_rows = ["Others", Total]
 # match_types.loc[6] = new_rows
-# print(match_types)
+# # print(match_types)
 #
 # # The plot of match types count
 # plt.figure(figsize=(15, 8))
@@ -40,7 +47,7 @@ data = pd.read_csv(CSV_FILE_PATH)
 # plt.show()
 
 # ------------------------------------------------------
-# ---------------------DATA Analysis--------------------
+# -                    DATA Analysis                   -
 # ------------------------------------------------------
 # # correlation matrix
 # plt.subplots(figsize=(15, 15))
@@ -48,18 +55,34 @@ data = pd.read_csv(CSV_FILE_PATH)
 # plt.savefig('./image/correlation matrix.png')
 # plt.show()
 #
-# # funny explore
+
+# ------------------------------------------------------
+# -                    Funny truth                     -
+# ------------------------------------------------------
 # print(data['teamKills'].describe())
 # print('The maximum of team kills is {number1}.'.format(number1=data['teamKills'].max()))
-# print('The minimum of team kills is {number2}.'.format(number2=data['teamKills'].min()))
+# print('The average of team kills is {number2}.'.format(number2=data['teamKills'].mean()))
+# print('The minimum of team kills is {number3}.'.format(number3=data['teamKills'].min()))
 # print("The longest kill distance {}".format(data["longestKill"].max()))
 # print("The average kill distance {}".format(data["longestKill"].mean()))
 # walk_distance = data.copy()
 # walk_distance = walk_distance[walk_distance["kills"] > 0]
 # print(len(walk_distance))
 
+# One type of cheater
+# Create new col call totalDistance
+# new_data = data.copy()
+# new_data['totalDistance'] = new_data['rideDistance'] + new_data['walkDistance'] + new_data['swimDistance']
+# # Create col call killsWithoutMoving
+# new_data['killsWithoutMoving'] = ((new_data['kills'] > 0) & (new_data['totalDistance'] == 0))
+# print("The total number of kill without moving is {}"
+#       .format(len(new_data[new_data['killsWithoutMoving'] == True])))
+#
+# sns.distplot(data['winPlacePerc'], kde=False)
+# plt.show()
+
 # ------------------------------------------------------
-# ---------------------kill analysis--------------------
+# -                    Kill Analysis                   -
 # ------------------------------------------------------
 # # Basic info of killer
 # data['kills'].describe()
@@ -113,9 +136,20 @@ data = pd.read_csv(CSV_FILE_PATH)
 # plt.title("DBNOs Count")
 # plt.show()
 
+# The plot of damagedealt  vs win ratio
+kill_data2 = data.copy()
+kill_data2['damageDealt_rank'] = pd.cut(kill_data2['damageDealt'],
+                                        [-1, 500, 1000, 1500, 2000, 2500, 60000],
+                                        labels=['0-500', '500-1000', '1000-1500',
+                                        '1500-2000', '2000-2500', '2500+'])
+
+sns.pointplot(x='damageDealt_rank', y='winPlacePerc', data=kill_data2)
+plt.xticks(rotation=45)
+plt.title('damageDealt VS. Win Ratio')
+plt.show()
 
 # ------------------------------------------------------
-# ---------------------run analysis--------------------
+# -                    Run Analysis                    -
 # ------------------------------------------------------
 # Basic info of runner
 
@@ -141,7 +175,7 @@ data = pd.read_csv(CSV_FILE_PATH)
 
 
 # ------------------------------------------------------
-# ---------------------drive analysis--------------------
+# -                    Drive Analysis                  -
 # ------------------------------------------------------
 # print(data['rideDistance'].describe())
 #
@@ -161,5 +195,3 @@ data = pd.read_csv(CSV_FILE_PATH)
 # sns.scatterplot(x="winPlacePerc", y="rideDistance", data=data)
 # plt.title("rideDistance Count")
 # plt.show()
-
-
