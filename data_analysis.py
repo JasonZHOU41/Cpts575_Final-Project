@@ -13,6 +13,9 @@ data = pd.read_csv(CSV_FILE_PATH)
 # # Check the basic info of training dataset
 # data.info()
 #
+# # Check the first 5 rows
+# print(data.head(5))
+
 # # Check the missing value of the dataset
 # print(data.isnull().sum())
 # print(data[data['winPlacePerc'].isnull()])
@@ -20,8 +23,6 @@ data = pd.read_csv(CSV_FILE_PATH)
 # # Drop row with NaN 'winPlacePerc' value
 # data.drop(2744604, inplace=True)
 #
-# # # Check the first 5 rows
-# # print(data.head(5))
 #
 # # Some information of the game
 # Group = ['Id', 'groupId', 'matchId']
@@ -54,7 +55,7 @@ data = pd.read_csv(CSV_FILE_PATH)
 # sns.heatmap(data.corr(), square=True, annot=True, fmt='.3f', annot_kws={"size": 8}, cmap="RdBu_r", center=0)
 # plt.savefig('./image/correlation matrix.png')
 # plt.show()
-#
+
 
 # ------------------------------------------------------
 # -                    Funny truth                     -
@@ -65,12 +66,13 @@ data = pd.read_csv(CSV_FILE_PATH)
 # print('The minimum of team kills is {number3}.'.format(number3=data['teamKills'].min()))
 # print("The longest kill distance {}".format(data["longestKill"].max()))
 # print("The average kill distance {}".format(data["longestKill"].mean()))
+#
 # walk_distance = data.copy()
 # walk_distance = walk_distance[walk_distance["kills"] > 0]
 # print(len(walk_distance))
-
-# One type of cheater
-# Create new col call totalDistance
+#
+# # One type of cheater
+# # Create new col call totalDistance
 # new_data = data.copy()
 # new_data['totalDistance'] = new_data['rideDistance'] + new_data['walkDistance'] + new_data['swimDistance']
 # # Create col call killsWithoutMoving
@@ -89,8 +91,8 @@ data = pd.read_csv(CSV_FILE_PATH)
 # print("The average of each team kills {:.4f} players, "
 #       "99% of people have {} kills, the most kills number is {}."
 #       .format(data['kills'].mean(), data['kills'].quantile(0.99), data['kills'].max()))
-#
-#
+
+
 # # Plot of kill count
 # kill_data = data.copy()
 # kill_data.loc[kill_data['kills'] > kill_data['kills'].quantile(0.99)] = '7+'
@@ -108,11 +110,22 @@ data = pd.read_csv(CSV_FILE_PATH)
 # print("There are {} players win the chicken without kill anyone, the percentage is {:.4f}% \n "
 #       "(Total people who win the game without kill anyone / Total people who kill zero people in the game)"
 #       .format(counts, 100*per))
+#
+# # People who is not that lucky
+# print("----------------------------------")
+# print("The number of player who kill 0 people {}, the percentage is {:.2f}% in all the people"
+#       .format(len(kill_data2), 100*(len(kill_data2)/len(data))))
+# print("----------------------------------")
+# print("The number of player who kill 0 people and did 0 damage is {},"
+#       " the percentage is {:.2f}% in all the people who kill 0 people"
+#       .format(len(kill_data2[kill_data2["damageDealt"] == 0]),
+#               100*(len(kill_data2[kill_data2["damageDealt"] == 0])/len(kill_data2))))
 
 # # Plot of Damage by 0 killers
-# plt.figure(figsize=(15, 10))
+# kill_data4 = data.copy()
+# kill_data4 = kill_data4[kill_data4['kills'] == 0]
 # plt.title("Damage Dealt by 0 killers")
-# sns.displot(kill_data2['damageDealt'])
+# sns.displot(kill_data4['damageDealt'])
 # plt.show()
 
 # # Plot of kill vs win
@@ -129,29 +142,29 @@ data = pd.read_csv(CSV_FILE_PATH)
 #
 # # Plot of DBNOs count
 # plt.figure(figsize=(15, 8))
-# kill_data = data.copy()
-# kill_data = kill_data[kill_data['kills'] == 0]
-# kill_data.loc[kill_data['DBNOs'] > 7] = '7+'
-# sns.countplot(kill_data['DBNOs'].astype('str').sort_values())
+# kill_data3 = data.copy()
+# kill_data3 = kill_data3[kill_data3['kills'] == 0]
+# kill_data3.loc[kill_data3['DBNOs'] > 7] = '7+'
+# sns.countplot(kill_data3['DBNOs'].astype('str').sort_values())
 # plt.title("DBNOs Count")
 # plt.show()
 
-# The plot of damagedealt  vs win ratio
-kill_data2 = data.copy()
-kill_data2['damageDealt_rank'] = pd.cut(kill_data2['damageDealt'],
-                                        [-1, 500, 1000, 1500, 2000, 2500, 60000],
-                                        labels=['0-500', '500-1000', '1000-1500',
-                                        '1500-2000', '2000-2500', '2500+'])
-
-sns.pointplot(x='damageDealt_rank', y='winPlacePerc', data=kill_data2)
-plt.xticks(rotation=45)
-plt.title('damageDealt VS. Win Ratio')
-plt.show()
+# # The plot of damagedealt  vs win ratio
+# kill_data3 = data.copy()
+# kill_data3['damageDealt_rank'] = pd.cut(kill_data3['damageDealt'],
+#                                         [-1, 500, 1000, 1500, 2000, 2500, 60000],
+#                                         labels=['0-500', '500-1000', '1000-1500',
+#                                         '1500-2000', '2000-2500', '2500+'])
+#
+# sns.pointplot(x='damageDealt', y='winPlacePerc', data=kill_data3)
+# plt.xticks(rotation=45)
+# plt.title('damageDealt VS. Win Ratio')
+# plt.show()
 
 # ------------------------------------------------------
-# -                    Run Analysis                    -
+# -                    Walk Analysis                    -
 # ------------------------------------------------------
-# Basic info of runner
+# Basic info of walker
 
 # Some facts about walking distance
 # print(data['walkDistance'].describe())
@@ -187,7 +200,7 @@ plt.show()
 # drive_data = data.copy()
 # drive_data = drive_data[drive_data['rideDistance'] < data['rideDistance'].quantile(0.99)]
 # plt.title("Drive Distance Distribution")
-# sns.distplot(drive_data['rideDistance'], kde=False)
+# sns.distplot(drive_data['rideDistance'], kde=False, color='red')
 # plt.show()
 #
 #
