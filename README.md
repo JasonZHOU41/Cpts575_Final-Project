@@ -1,6 +1,6 @@
-# Cpts575
+# Describe
 
-This repo is for the final project of CPTs 575
+PUBG dataset EDA and predict
 
 perdict_model.ipynb (Did by Haoran Yang)
 
